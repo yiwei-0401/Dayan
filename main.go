@@ -8,7 +8,7 @@ import (
 	"bytes"
 	_ "github.com/Go-SQL-Driver/MySQL"
 )
-
+const DAYAN = 49  //大衍之数五十，其用四十有九
 func main() {
 	var yao string
 	var bianyao string
@@ -16,7 +16,6 @@ func main() {
 	var biangua bytes.Buffer
 	var bianyaos []int
 	for i := 1; i < 7; i++ {
-		const DAYAN = 49
 		yaoNum := change(DAYAN, 1)
 		yaoNum = yaoNum / 4
 		//0表示阴爻，1表示阳爻
@@ -41,11 +40,11 @@ func main() {
 		biangua.WriteString(bianyao)
 	}
 	//从数据库中取出字符串代表的卦的行数据
-	db,err := sql.Open("mysql","*/zhouyi?charset=utf8");
+	db,err := sql.Open("mysql","root:root@tcp(127.0.0.1:3306)/zhouyi?charset=utf8");
 	if err != nil{
 		fmt.Printf("connect mysql fail ! [%s]",err)
 	}
-	benguaRows,err := db.Query("select name,guaci,yao_1,yao_2,yao_3,yao_4,yao_5,yao_6 from 64gua where code = " + bengua.String());
+	benguaRows,err := db.Query("select name,guaci,yao_1,yao_2,yao_3,yao_4,yao_5,yao_6 from gua64 where code = " + bengua.String());
 	if err != nil{
 		fmt.Printf("select fail [%s]",err)
 	}
@@ -66,7 +65,7 @@ func main() {
 		fmt.Println("本卦", ben_name)
 	}
 
-	bianguaRows, err := db.Query("select name,guaci,yao_1,yao_2,yao_3,yao_4,yao_5,yao_6 from 64gua where code = " + biangua.String());
+	bianguaRows, err := db.Query("select name,guaci,yao_1,yao_2,yao_3,yao_4,yao_5,yao_6 from gua64 where code = " + biangua.String());
 	if err != nil {
 		fmt.Printf("select fail [%s]", err)
 	}
